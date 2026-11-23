@@ -24,9 +24,9 @@ Read `docs/SRS.md` (the PDF) before doing anything. It is the source of truth.
 
 | Member | Assigned modules |
 |--------|-----------------|
-| Aromal | Victim App (1), Connector (2), Attack Runner (3) |
+| Aromal | *(reassigned — to be filled in)* |
 | Joseph | *(to be filled in)* |
-| Aman   | *(to be filled in)* |
+| Aman   | Victim App (1), Connector (2), Attack Runner (3) |
 
 Each agent **only edits files inside its assigned module folder**.
 For changes in another module or a shared file (`AGENTS.md`, `docs/`, `ui/`),
