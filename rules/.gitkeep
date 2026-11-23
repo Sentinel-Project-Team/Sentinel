@@ -1,0 +1,4 @@
+# Placeholder – Guard rules directory
+# Human-editable YAML rule files go here.
+# Generated files: rules/generated_<timestamp>.yaml  (reviewed: false until a human edits)
+# Seed files:      rules/default.yaml
