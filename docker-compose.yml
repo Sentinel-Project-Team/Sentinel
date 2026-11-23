@@ -1,0 +1,95 @@
+version: "3.9"
+
+services:
+  # ── Ollama: local LLM runtime ─────────────────────────────────────────────
+  ollama:
+    image: ollama/ollama:latest
+    container_name: sentinel_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    # Pull the model on first start; change the model name here if needed.
+    # The entrypoint pulls the model then keeps serving.
+    entrypoint: >
+      sh -c "
+        ollama serve &
+        sleep 5 &&
+        ollama pull ${SENTINEL_MODEL:-llama3.2:1b} &&
+        wait
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+
+  # ── Victim App: our chatbot with planted canaries ─────────────────────────
+  victim:
+    build:
+      context: ./victim
+      dockerfile: Dockerfile
+    container_name: sentinel_victim
+    ports:
+      - "8001:8001"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - SENTINEL_MODEL=${SENTINEL_MODEL:-llama3.2:1b}
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # ── Guard Gateway: inspect / allow / clean / block ────────────────────────
+  guard:
+    build:
+      context: ./guard
+      dockerfile: Dockerfile
+    container_name: sentinel_guard
+    ports:
+      - "8002:8002"
+    environment:
+      - UPSTREAM_URL=http://victim:8001
+      - DB_PATH=/data/sentinel.db
+      - RULES_DIR=/app/rules
+    volumes:
+      - sentinel_db:/data
+      - ./rules:/app/rules:ro
+    depends_on:
+      victim:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # ── Dashboard: web UI ─────────────────────────────────────────────────────
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: sentinel_dashboard
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_PATH=/data/sentinel.db
+      - GUARD_URL=http://guard:8002
+    volumes:
+      - sentinel_db:/data:ro
+    depends_on:
+      guard:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  sentinel_db:
