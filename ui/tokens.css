@@ -1,0 +1,140 @@
+/*
+ * ui/tokens.css
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Sentinel Design Tokens — single source of truth for every UI in this repo.
+ * Rules:
+ *   - No component may use raw hex values or magic pixel numbers.
+ *   - All values come from var(--token-name) defined here.
+ *   - Semantic color tokens (--color-leak, --color-allowed, --color-warning)
+ *     are RESERVED for their meaning. Never use them decoratively.
+ *   - Dark theme is default. Light theme overrides via [data-theme="light"].
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+
+/* ── Fonts ───────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+:root {
+  /* UI typeface: IBM Plex Sans (distinctive, technical, readable) */
+  --font-ui: 'IBM Plex Sans', system-ui, sans-serif;
+
+  /* Monospace: prompts, responses, canaries, rule files, code */
+  --font-mono: 'IBM Plex Mono', 'Cascadia Code', 'Fira Code', monospace;
+
+  /* Font weights — maximum 2 in use */
+  --font-weight-normal: 400;
+  --font-weight-semibold: 600;
+
+  /* Font sizes (4px-rooted scale) */
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.875rem;  /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg:   1.125rem;  /* 18px */
+  --text-xl:   1.25rem;   /* 20px */
+  --text-2xl:  1.5rem;    /* 24px */
+
+  /* Line heights */
+  --leading-tight:  1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* ── Spacing scale (4px base) ─────────────────────────────────────────── */
+  --space-1:  0.25rem;   /*  4px */
+  --space-2:  0.5rem;    /*  8px */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+
+  /* ── Border radii ─────────────────────────────────────────────────────── */
+  --radius-none: 0;
+  --radius-sm:   2px;
+  --radius-md:   4px;
+  --radius-lg:   6px;
+
+  /* ── Dark theme palette (default) ────────────────────────────────────── */
+
+  /* Backgrounds */
+  --color-bg:          #0d0f12;   /* page background */
+  --color-bg-surface:  #161a20;   /* panels, table rows */
+  --color-bg-raised:   #1e242d;   /* inputs, secondary surfaces */
+  --color-bg-overlay:  #252c38;   /* hover, selected rows */
+
+  /* Borders */
+  --color-border:      #2a3140;
+  --color-border-subtle: #1e242d;
+
+  /* Text — all meet ≥ 4.5:1 contrast on --color-bg */
+  --color-text:        #e2e6ed;   /* primary text */
+  --color-text-muted:  #8b95a6;   /* secondary / metadata */
+  --color-text-faint:  #4a5568;   /* disabled / placeholder */
+
+  /* Interactive */
+  --color-accent:      #4f8ef7;   /* links, focus rings, primary action */
+  --color-accent-hover:#6ba3f9;
+
+  /* ── Semantic colors — RESERVED, never decorative ────────────────────── */
+  --color-leak:         #e05252;  /* red  → canary leaked / blocked */
+  --color-leak-bg:      #2d1414;  /* red surface for highlighted rows */
+  --color-leak-text:    #f5a0a0;  /* readable red text on dark bg */
+
+  --color-allowed:      #3dab6b;  /* green → allowed / safe */
+  --color-allowed-bg:   #0f2820;
+  --color-allowed-text: #86efac;
+
+  --color-warning:      #d4910a;  /* amber → warning / cleaned */
+  --color-warning-bg:   #2b1f07;
+  --color-warning-text: #fcd34d;
+
+  /* ── Monospace surface (prompts / responses / canaries) ──────────────── */
+  --color-mono-bg:      #0a0c0f;
+  --color-mono-border:  --color-border;
+  --color-mono-text:    #c8d3e0;
+
+  /* ── Canary highlight (within monospace blocks) ──────────────────────── */
+  --color-canary-highlight-bg:   #3d1a1a;
+  --color-canary-highlight-text: #f5a0a0;
+
+  /* ── Focus ring ──────────────────────────────────────────────────────── */
+  --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-accent);
+}
+
+/* ── Light theme overrides ───────────────────────────────────────────────── */
+[data-theme="light"] {
+  --color-bg:          #f4f6f9;
+  --color-bg-surface:  #ffffff;
+  --color-bg-raised:   #edf0f5;
+  --color-bg-overlay:  #e2e6ed;
+
+  --color-border:      #cdd3dc;
+  --color-border-subtle: #e2e6ed;
+
+  --color-text:        #111827;
+  --color-text-muted:  #4b5563;
+  --color-text-faint:  #9ca3af;
+
+  --color-accent:      #2563eb;
+  --color-accent-hover:#1d4ed8;
+
+  --color-leak:         #dc2626;
+  --color-leak-bg:      #fef2f2;
+  --color-leak-text:    #991b1b;
+
+  --color-allowed:      #16a34a;
+  --color-allowed-bg:   #f0fdf4;
+  --color-allowed-text: #14532d;
+
+  --color-warning:      #d97706;
+  --color-warning-bg:   #fffbeb;
+  --color-warning-text: #78350f;
+
+  --color-mono-bg:      #f8fafc;
+  --color-mono-text:    #1e293b;
+
+  --color-canary-highlight-bg:   #fef2f2;
+  --color-canary-highlight-text: #991b1b;
+}
