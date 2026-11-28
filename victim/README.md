@@ -65,3 +65,10 @@ docker compose up victim
 ```
 
 The service waits for Ollama to be healthy before starting.
+
+
+## Canary tests
+
+`victim/tests/test_canaries.py` checks that `canaries.yaml` has at least three
+canaries, that every value is unique and non-empty, and that every canary is
+planted in the system prompt. Run: `pytest victim/tests/test_canaries.py -v`
